@@ -49,4 +49,5 @@ import BookCard from './book-card.vue';
       imageUrl: 'https://via.placeholder.com/150',
     },
   ];
+
 </script>
