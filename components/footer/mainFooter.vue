@@ -1,8 +1,8 @@
 <template>
     <div class="fixed flex justify-center w-full bottom-0 bg-[#3C5B6F] h-[100px]">
     <footer class="flex flex-col text-w-100 mt-5 border-t w-full">
-        <div class="flex justify-center items-center flex-wrap mt-10  border-gary-100 sm:px-16 ">
-            <p>@2024 bookShop. All Right Reserved</p>
+        <div class="flex justify-center items-center flex-wrap mt-10  border-gary-100 sm:px-16 font-mono text-white">
+            <p>@2024 BookShop. All Right Reserved</p>
         </div>
     </footer>
     </div>
