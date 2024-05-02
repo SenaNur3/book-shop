@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="flex justify-center relative">
         <bookMain />
     </div>
 </template>
