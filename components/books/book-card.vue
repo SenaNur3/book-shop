@@ -1,22 +1,44 @@
 <template>
-    <div
-        class="w-[250px] flex flex-col border rounded-lg h-[400px] gap-[10px] p-[16px] bg-[#EEF5FF] border-[#B4D4FF]  font-mono">
-        <NuxtLink :to="generateUrl" class="flex justify-between flex-col h-full">
-            <img :src="book.cover_image" alt="Book Cover" class="w-[300px] h-[200px]" />
-            <div class="book-details">
-                <h3 class="italic font-sans text-center w-full mb-[10px]">{{ book.title }}</h3>
-                <p class="whitespace-nowrap overflow-hidden text-ellipsis">Author: {{ book.author }}</p>
-                <p class="whitespace-nowrap overflow-hidden text-ellipsis">Price: ${{ book.publication_year }}</p>
-                <p class="whitespace-nowrap overflow-hidden text-ellipsis">Pages: {{ book.description }}</p>
+    <div class="w-[250px] flex flex-col gap-[10px] p-[16px] ">
+        <NCard>
+            <template #cover>
+                <NuxtLink :to="generateUrl" class="flex justify-between flex-col h-full">
+                    <img :src="book.image" class="max-h-[300px]">
+                </NuxtLink>
+            </template>
+            <span class="truncate font-[500] text-[16px] block">{{ book.title }}</span>
+            <span class="truncate font-[400] text-[14px] block">{{ book.author }}</span>
+            <div class="w-full flex justify-end">
+                <span class="truncate font-[500] text-[20px] mb-4">{{ book.price }} ₺</span>
             </div>
-        </NuxtLink>
-        <div class="flex  justify-end">
-            <button v-if="showAdded" class="bg-[#8DECB4] text-[#3C5B6F] p-[3px] rounded-md w-[95px] h-[30px] whitespace-nowrap text-xs"
-                @click="addBasket(book.id)">Sepete Ekledi</button>
-            <button v-else class="bg-blue-500 text-white p-[3px] rounded-md w-[95px] h-[30px] whitespace-nowrap text-xs"
-                @click="addBasket(book.id)">Sepete Ekle</button>
-            
-        </div>
+            <div class="block w-full">
+
+
+                <div v-if="book.size > 0" class="flex">
+   
+                    <NButton color="#5BBCFF" ghost @click="deleteBasket(book)">
+                            -
+                    </NButton>
+
+                   <div class="w-[100px] flex items-center justify-center"> <strong class=""> {{ book.size }}</strong> </div>
+       
+                   <NButton color="#5BBCFF" ghost  @click="addBasket(book)">
+                            +
+                    </NButton>
+
+                </div>
+                <NButton v-else color="#5BBCFF" ghost class="w-full" @click="addBasket(book)">
+                    <template #icon>
+                        <NIcon>
+                            <CartIcon />
+                        </NIcon>
+                    </template>
+                    Sepete Ekle
+                </NButton>
+
+            </div>
+        </NCard>
+
 
     </div>
 </template>
@@ -24,14 +46,17 @@
 <script>
 import { useBookStore } from '~/store/book-store.js';
 import { storeToRefs } from 'pinia';
+import { NCard, NButton, NIcon, NInputNumber } from 'naive-ui'
+import { CartOutline as CartIcon } from '@vicons/ionicons5'
 
 export default {
     name: 'bookCard',
     props: ['book'],
+    components: { NCard, NIcon, NButton, NInputNumber, CartIcon },
     setup(props) {
         const showAdded = ref(false);
         const bookStore = useBookStore();
-        const { getBooks } = storeToRefs(bookStore);
+        const { getBooks, getCard } = storeToRefs(bookStore);
 
         const generateUrl = computed(() => {
             const modifiedTitle = props.book.title.replace(/\s+/g, '-').toLowerCase();
@@ -41,13 +66,19 @@ export default {
 
         const addBasket = (id) => {
             bookStore.addCard(id)
-            showAdded.value = true; 
+            showAdded.value = true;
             console.log(id, "ürün eklendi")
             setTimeout(() => {
                 showAdded.value = false;
-            },500);
+            }, 500);
         }
-        return { generateUrl, addBasket, showAdded } 
+
+        const deleteBasket = (id) => {
+            bookStore.deleteCard(id)
+        }
+        return {
+            generateUrl, addBasket, showAdded, value: ref(0), getCard, deleteBasket
+        }
     }
 }
-</script>~/store/book-store.js
+</script>
